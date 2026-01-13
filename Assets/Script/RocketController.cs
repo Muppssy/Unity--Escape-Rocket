@@ -7,14 +7,18 @@ public class RocketController : MonoBehaviour
     public float vitesseDescente;   
     public InputActionReference toucheMonte;
     public bool isJumpPressed;
+    public GameObject canvas;
+    private bool isGameActive = true;
     void Start()
     {
-        
+        canvas.SetActive(false);
     }
 
     // Update is called once per frame
     private void Update()
     {
+        if (!isGameActive) return;
+        
         if (isJumpPressed)
         {
             transform.position += new Vector3(0, vitesseDescente*Time.deltaTime, 0);
@@ -60,7 +64,15 @@ public class RocketController : MonoBehaviour
         if(other.collider.CompareTag("Sol"))
         {
         print("Je suis entré en collision avec " + other.gameObject.name);
-         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+         isGameActive = false;
+         Time.timeScale = 0f;
+         canvas.SetActive(true);
         }
+    }
+    
+    public void Restart()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
     }
 }
